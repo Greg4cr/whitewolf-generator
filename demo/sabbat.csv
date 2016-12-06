@@ -1,16 +1,18 @@
-Assamite Antitribu,
-Brujah Antitribu,
-City Gangrel,
-Country Gangrel,
-Lasombra,
-Malkavian Antitribu,
-Nosferatu Antitribu,
-Toreador Antitribu,
-Tzimisce,
-Ventrue Antitribu,
-Harbinger of Skulls,
-Ravnos Antitribu,
-Salubri Antitribu,
-Ahrimane,
-Pander,
-Serpents of the Light,
+# Weights for a Sabbat chronicle.
+# Clan, % of distribution
+Assamite Antitribu,5
+Salubri Antitribu,1
+Brujah Antitribu,8
+City Gangrel,4
+Country Gangrel,4
+Ahrimane,1
+Lasombra,20
+Serpents of the Light,1
+Malkavian Antitribu,5
+Nosferatu Antitribu,8
+Ravnos Antitribu,1
+Toreador Antitribu,8
+Tzimisce,20
+Ventrue Antitribu,8
+Harbinger of Skulls,1
+Pander,5
