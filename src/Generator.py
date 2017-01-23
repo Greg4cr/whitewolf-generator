@@ -118,6 +118,7 @@ class Generator():
     # Can assign up to three, with odds weighted towards none.
     def selectDerangements(self):
         myDerangements = []
+        numDer = 0
 
         # Generic derangements
         derangements = ["agoraphobia", "amnesia", "antisocial personality disorder", "berserk", "bipolar affective disorder", "bulimia", "compulsion", "dependent personality disorder", "fugue", "histrionics", "hysteria", "klazomania", "megolomania", "memory lapses", "multiple-personality disorder", "obsessive-compulsive disorder", "overcompensation", "paranoia", "phobia", "power-object fixation", "post-traumatic stress disorder", "regression", "schizophrenia", "self-defeating personality disorder", "sexual dysfunction", "synesthesia"]
@@ -135,20 +136,22 @@ class Generator():
             derangements.append("sanguinary animism")
             derangements.append("sanguinary cryptophagy")
             derangements.append("self-annihilation impulse")
-            derangements.append("severe dysmenorrheic psychosis")
+  
+            if "Malkavian" in self.sheet.clan:
+               numDer = 1
 
         # TODO: Add discipline-specific derangements
         
         # Choose number of derangements
         choice = random.random()
         if choice > 0.95:
-            numDer = 3
+            numDer += 3
         elif choice > 0.85:
-            numDer = 2
+            numDer += 2
         elif choice > 0.75:
-            numDer = 1
+            numDer += 1
         else:
-            numDer = 0
+            numDer += 0
 
         # Choose specific derangements
         for derangement in range(0,numDer):
