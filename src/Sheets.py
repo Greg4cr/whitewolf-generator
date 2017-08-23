@@ -12,11 +12,21 @@ class Vampire():
     generation = 13
     # Derangements
     derangements = []
+    # Dusciplines
+    disciplines = []
 
     # Pretty printing (to screen)
     def printToScreen(self):
         print "Clan: " + self.clan
         print "Generation: " + str(self.generation)
+        dis = "Disciplines: "
+
+        for entry in self.disciplines:
+            dis = dis + entry + ", "
+        dis = dis[:len(dis) - 2]
+
+        print dis
+
         der = "Derangements: "
 
         if len(self.derangements) == 0:
@@ -33,6 +43,16 @@ class Vampire():
             output = open(outFile, "w")
             output.write("Clan: " + self.clan + "\n")
             output.write("Generation: " + str(self.generation) + "\n")
+          
+            dis = "Disciplines: "
+   
+            for entry in self.disciplines:
+                dis = dis + entry + ", "
+
+            dis = dis[:len(dis) - 2]
+
+            output.write(dis + "\n")
+
             der = "Derangements: "
             if len(self.derangements) == 0:
                 der = der + "(none)"

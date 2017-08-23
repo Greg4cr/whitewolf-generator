@@ -25,6 +25,7 @@ import getopt
 import sys
 import os
 import random
+import copy
 from Sheets import *
 
 class Generator(): 
@@ -46,6 +47,8 @@ class Generator():
             self.initializeWeights(classWeightFile)
             # Choose a clan
             self.sheet.clan = self.selectClass()
+            # Choose disciplines
+            self.sheet.disciplines = self.selectDisciplines() 
             # Choose a generation
             self.sheet.generation = self.selectPowerLevel()
             # Choose derangements
@@ -86,10 +89,15 @@ class Generator():
             for index in range(0,int(entry[1])):
                 classSelect.append(entry[0])
 
-        if len(classSelect) < 100:
-            raise Exception("Sum of weights " + str(len(classSelect)) + "is less than 100")
-        else:
-            return classSelect[random.randint(0,99)]
+        # Shuffle the list of classes
+        newClassSelect = []
+        while len(classSelect) > 0:
+            choice = random.randint(0, len(classSelect) - 1)
+            newClassSelect.append(classSelect[choice])
+            del classSelect[choice]
+        classSelect = copy.deepcopy(newClassSelect)
+
+        return classSelect[random.randint(0,len(classSelect) - 1)]
     
     # Select character power level (i.e., generation in Vampire)
     # Power is weighted towards minimal level.
@@ -113,6 +121,110 @@ class Generator():
                  maxP-=1
 
         return genSelect[random.randint(0,len(genSelect)-1)]
+
+    # Select disciplines
+    # This is generally pre-determined by clan, but randomly chooses for Caitiffs/Panders
+    def selectDisciplines(self):
+        myDisciplines = []
+
+        # Pre-determined disciplines
+        if "Assamite" in self.sheet.clan:
+            if "Sorcerer" in self.sheet.clan:
+                myDisciplines = ["Assamite Sorcery", "Obfuscate", "Quietus"]
+            elif "Vizier" in self.sheet.clan:
+                myDisciplines = ["Auspex", "Celerity", "Quietus"]
+            else:
+                myDisciplines = ["Celerity", "Obfuscate", "Quietus"]
+        elif "Baali" in self.sheet.clan:
+            myDisciplines = ["Daimonion", "Obfuscate", "Presence"]
+        elif "Blood Brothers" == self.sheet.clan:
+            myDisciplines = ["Fortitude", "Potence", "Sanguinus"]
+        elif "Brujah" in self.sheet.clan:
+            if "True" in self.sheet.clan:
+                myDisciplines = ["Potence", "Presence", "Temporis"]
+            else:
+                myDisciplines = ["Celerity", "Potence", "Presence"]
+        elif "Cappadocian" == self.sheet.clan:
+            myDisciplines = ["Auspex", "Fortitude", "Mortis"]
+        elif "Daughters of Cacophony" == self.sheet.clan:
+            myDisciplines = ["Fortitude", "Melpominee", "Presence"]
+        elif self.sheet.clan == "Followers of Set" or self.sheet.clan == "Serpents of the Light":
+            myDisciplines = ["Obfuscate", "Presence", "Serpentis"]
+        elif "Gangrel" in self.sheet.clan:
+            if "City" in self.sheet.clan:
+                myDisciplines = ["Celerity", "Obfuscate", "Protean"]
+            else: 
+                myDisciplines = ["Animalism", "Fortitude", "Protean"]
+        elif "Gargoyle" == self.sheet.clan:
+            myDisciplines = ["Flight", "Fortitude", "Potence", "Visceratika"]
+        elif "Harbingers of Skulls" == self.sheet.clan:
+            myDisciplines = ["Auspex", "Fortitude", "Necromancy"]
+        elif self.sheet.clan == "Giovanni":
+            myDisciplines = ["Dominate", "Necromancy", "Potence"]
+        elif "Kiasyd" == self.sheet.clan:
+            myDisciplines = ["Dominate", "Mytherceria", "Obtenebration"]
+        elif "Lasombra" in self.sheet.clan:
+            myDisciplines = ["Dominate", "Obtenebration", "Potence"]
+        elif "Malkavian" in self.sheet.clan:
+            myDisciplines = ["Auspex", "Dementation", "Obfuscate"]
+        elif "Nagaraja" == self.sheet.clan:
+            myDisciplines = ["Auspex", "Necromancy", "Nihilistics"]
+        elif "Nosferatu" in self.sheet.clan:
+            myDisciplines = ["Animalism", "Obfuscate", "Potence"]
+        elif "Ravnos" in self.sheet.clan:
+            myDisciplines = ["Animalism", "Chimerstry", "Fortitude"]
+        elif "Salubri" in self.sheet.clan:
+            if "Warrior" in self.sheet.clan or "Antitribu" in self.sheet.clan:
+                myDisciplines = ["Auspex", "Fortitude", "Valeren"]
+            else: 
+                myDisciplines = ["Auspex", "Fortitude", "Obeah"]
+        elif "Samedi" == self.sheet.clan:
+            myDisciplines = ["Fortitude", "Obfuscate", "Thanatosis"]
+        elif "Toreador" in self.sheet.clan:
+            myDisciplines = ["Auspex", "Celerity", "Presence"]
+        elif "Tremere" in self.sheet.clan:
+            myDisciplines = ["Auspex", "Dominate", "Thaumaturgy"]
+        elif "Tzimisce" in self.sheet.clan:
+            if "Old Clan" in self.sheet.clan:
+                myDisciplines = ["Auspex", "Animalism", "Dominate"]
+            elif "Sorcerer" in self.sheet.clan:
+                myDisciplines = ["Auspex", "Animalism", "Koldunic Sorcery"]
+            else:
+                myDisciplines = ["Auspex", "Animalism", "Vicissitude"]
+        elif "Ventrue" in self.sheet.clan:
+            myDisciplines = ["Dominate", "Fortitude", "Presence"]
+        else:
+            myDisciplines = ["(unknown)"]
+ 
+        # If you are a Pander or Caitiff, you get random disciplines (fun!)
+        if self.sheet.clan == "Pander" or self.sheet.clan == "Caitiff":
+            myDisciplines = []
+            common = []
+            rare = []
+            
+            if self.sheet.clan == "Pander":
+                common = ["Celerity", "Obfuscate", "Presence", "Potence", "Fortitude", "Auspex", "Obtenebration", "Dominate", "Animalism", "Vicissitude"]
+                rare = ["Quietus", "Dementation", "Daimonion", "Serpentis", "Protean", "Necromancy", "Mytherceria", "Nihilistics", "Chimerstry", "Valeren", "Thanatosis"]
+            elif self.sheet.clan == "Caitiff":
+                common = ["Celerity", "Obfuscate", "Presence", "Potence", "Fortitude", "Auspex", "Dominate", "Animalism"]
+                rare = ["Obeah", "Melpominee", "Mortis", "Quietus", "Dementation", "Daimonion", "Serpentis", "Protean", "Necromancy", "Chimerstry", "Valeren", "Thaumaturgy"]
+
+            # Select three disciplines from the common/rare lists
+            for choice in range(1,4):
+               prob = random.randint(1,10)
+               if prob <= 8:
+                   # choose from common
+                   selection = random.randint(0, len(common) - 1)
+                   myDisciplines.append(common[selection])
+                   del common[selection]
+               else:
+                   # choose from rare
+                   selection = random.randint(0, len(rare) - 1)
+                   myDisciplines.append(rare[selection])
+                   del rare[selection]
+    
+        return myDisciplines
+
 
     # Select derangements.
     # Can assign up to three, with odds weighted towards none.
